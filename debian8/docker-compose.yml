@@ -41,7 +41,7 @@ services:
       - "architecture=$BUILD_ARCH"
       - "org.label-schema.version=$BUILD_VERSION"
       - "org.label-schema.build-date=$BUILD_DATE"
-    image: "solict/high-performance-php-stack:debian8_httpd24_web"
+    image: "stafli/stafli.httpd.web:debian8_httpd24_web"
     build:
       context: "./dockerfiles"
       dockerfile: "httpd24-web.dockerfile"
