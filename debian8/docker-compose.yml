@@ -71,10 +71,6 @@ services:
         app_httpd_vhost_fpm_wlist: "ip 127.0.0.1 10.0.0.0/8 172.16.0.0/12 192.168.0.0/16"
         app_httpd_vhost_fpm_addr: "debian8_php56_1"
         app_httpd_vhost_fpm_port: "9000"
-    depends_on:
-      - php56
-    links:
-      - php56
     logging:
       driver: "json-file"
     networks:
