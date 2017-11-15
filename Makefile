@@ -1,7 +1,8 @@
 #
-#    Makefile
-#    Copyright (C) 2016 SOL-ICT
-#    This file is part of the Docker High Performance PHP Stack.
+#    Stafli HTTPd Web Server (makefile)
+#    Copyright (C) 2016-2017 Stafli
+#    Luís Pedro Algarvio
+#    This file is part of the Stafli Application Stack.
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -26,7 +27,7 @@ all: help
 
 help:
 	@echo "\
-Docker High Performance PHP Stack\n\
+Stafli HTTPd Web Server\n\
 \n\
 Syntax:\n\
 make <command> DISTRO=<distribution>\n\
@@ -169,13 +170,13 @@ purge:
 		bash -c "(cd $(DISTRO); set -o allexport; source .env; set +o allexport; docker-compose down)";
 		docker volume rm $(DISTRO)_web_data;
                 ifeq ($(DISTRO), debian8)
-			docker rmi solict/high-performance-php-stack:$(DISTRO)_httpd24_web;
+			docker rmi stafli/stafli.httpd.web:$(DISTRO)_httpd24_web;
                 else ifeq ($(DISTRO), debian7)
-			docker rmi solict/high-performance-php-stack:$(DISTRO)_httpd22_web;
+			docker rmi stafli/stafli.httpd.web:$(DISTRO)_httpd22_web;
                 else ifeq ($(DISTRO), centos7)
-			docker rmi solict/high-performance-php-stack:$(DISTRO)_httpd24_web;
+			docker rmi stafli/stafli.httpd.web:$(DISTRO)_httpd24_web;
                 else ifeq ($(DISTRO), centos6)
-			docker rmi solict/high-performance-php-stack:$(DISTRO)_httpd22_web;
+			docker rmi stafli/stafli.httpd.web:$(DISTRO)_httpd22_web;
                 endif
         endif
 
@@ -186,19 +187,19 @@ img-ls:
 	@echo
         ifeq ($(DISTRO), all)
 		@echo Listing images for debian8...
-		docker images | grep -E "solict/high-performance-php-stack.*debian8" | sort -n;
+		docker images | grep -E "stafli/stafli.httpd.web.*debian8" | sort -n;
 		@echo
 		@echo Listing images for debian7...
-		docker images | grep -E "solict/high-performance-php-stack.*debian7" | sort -n;
+		docker images | grep -E "stafli/stafli.httpd.web.*debian7" | sort -n;
 		@echo
 		@echo Listing images for centos7...
-		docker images | grep -E "solict/high-performance-php-stack.*centos7" | sort -n;
+		docker images | grep -E "stafli/stafli.httpd.web.*centos7" | sort -n;
 		@echo
 		@echo Listing images for centos6...
-		docker images | grep -E "solict/high-performance-php-stack.*centos6" | sort -n;
+		docker images | grep -E "stafli/stafli.httpd.web.*centos6" | sort -n;
         else
 		@echo Listing images for $(DISTRO)...
-		docker images | grep -E "solict/high-performance-php-stack.*$(DISTRO)" | sort -n;
+		docker images | grep -E "stafli/stafli.httpd.web.*$(DISTRO)" | sort -n;
         endif
 
 
@@ -265,13 +266,13 @@ img-rm:
         else
 		@echo Removing images for $(DISTRO)...
                 ifeq ($(DISTRO), debian8)
-			docker rmi solict/high-performance-php-stack:$(DISTRO)_httpd24_web;
+			docker rmi stafli/stafli.httpd.web:$(DISTRO)_httpd24_web;
                 else ifeq ($(DISTRO), debian7)
-			docker rmi solict/high-performance-php-stack:$(DISTRO)_httpd22_web;
+			docker rmi stafli/stafli.httpd.web:$(DISTRO)_httpd22_web;
                 else ifeq ($(DISTRO), centos7)
-			docker rmi solict/high-performance-php-stack:$(DISTRO)_httpd24_web;
+			docker rmi stafli/stafli.httpd.web:$(DISTRO)_httpd24_web;
                 else ifeq ($(DISTRO), centos6)
-			docker rmi solict/high-performance-php-stack:$(DISTRO)_httpd22_web;
+			docker rmi stafli/stafli.httpd.web:$(DISTRO)_httpd22_web;
                 endif
         endif
 
