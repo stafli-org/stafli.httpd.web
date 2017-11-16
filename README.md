@@ -1,6 +1,7 @@
 # Stafli HTTPd Web Server
 Stafli HTTPd Web Server builds based on [Debian](https://www.debian.org/) and [CentOS](https://www.centos.org/), and developed as scripts for [Docker](https://www.docker.com/).  
-Continues on [Stafli Base System](https://github.com/stafli-org/stafli.base.system) and [Stafli Devel System](https://github.com/stafli-org/stafli.devel.system) builds.
+Continues on [Stafli Base System](https://github.com/stafli-org/stafli.base.system) and [Stafli Devel System](https://github.com/stafli-org/stafli.devel.system) builds.  
+This project is part of the [Stafli Application Stack](https://github.com/stafli-org/).
 
 Requires [Docker Compose](https://docs.docker.com/compose/) 1.6.x or higher due to the [version 2](https://docs.docker.com/compose/compose-file/#versioning) format of the docker-compose.yml files.
 
@@ -22,7 +23,7 @@ The services use custom images as a starting point:
 
 ## Services
 These are the services described by the dockerfile and docker-compose files:
-- HTTPd 2.2.x/2.4.x Web, adds HTTPd on top of upstream Base/Devel service
+- HTTPd 2.x.x Web, built on Stafli Base System and Stafli Devel System and additional HTTPd packages
 
 ## Images
 These are the [resulting images](https://hub.docker.com/r/stafli/stafli.httpd.web/tags/) upon building:
