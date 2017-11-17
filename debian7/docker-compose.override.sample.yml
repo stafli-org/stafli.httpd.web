@@ -40,7 +40,6 @@ services:
         app_httpd_vhost_listen_port_https: "8443"
         app_httpd_vhost_fpm_port: "9000"
     ports:
-      - "10022"
       - "8080"
       - "8443"
 

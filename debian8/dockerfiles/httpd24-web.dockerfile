@@ -157,7 +157,7 @@ RUN printf "Updading Supervisor configuration...\n"; \
     # /etc/supervisor/conf.d/init.conf \
     file="/etc/supervisor/conf.d/init.conf"; \
     printf "\n# Applying configuration for ${file}...\n"; \
-    perl -0p -i -e "s>supervisorctl start dropbear;>supervisorctl start dropbear; supervisorctl start httpd;>" ${file}; \
+    perl -0p -i -e "s>supervisorctl start crond;>supervisorctl start crond; supervisorctl start httpd;>" ${file}; \
     printf "Done patching ${file}...\n"; \
     \
     # /etc/supervisor/conf.d/httpd.conf \

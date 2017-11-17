@@ -89,7 +89,6 @@ services:
     volumes:
       - web_data:/var/www
     ports:
-      - "22"
       - "80"
       - "443"
     working_dir: "/tmp"
