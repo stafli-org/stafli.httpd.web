@@ -23,11 +23,11 @@ The services use custom images as a starting point:
 
 ## Services
 These are the services described by the dockerfile and docker-compose files:
-- HTTPd 2.x.x Web, built on Stafli Base System and Stafli Devel System and additional HTTPd packages
+- 2.2.x/2.4.x Web, built on Stafli Base System and Stafli Devel System and additional HTTPd packages
 
 ## Images
 These are the [resulting images](https://hub.docker.com/r/stafli/stafli.httpd.web/tags/) upon building:
-- HTTPd 2.x.x Web:
+- 2.2.x/2.4.x Web:
   - stafli/stafli.httpd.web:debian8_httpd24_web
   - stafli/stafli.httpd.web:debian7_httpd22_web
   - stafli/stafli.httpd.web:centos7_httpd24_web
@@ -35,7 +35,7 @@ These are the [resulting images](https://hub.docker.com/r/stafli/stafli.httpd.we
 
 ## Containers
 These containers can be created from the images:
-- HTTPd 2.x.x Web:
+- 2.2.x/2.4.x Web:
   - debian8_httpd24_web_xxx
   - debian7_httpd22_web_xxx
   - centos7_httpd24_web_xxx
@@ -88,7 +88,6 @@ make up DISTRO=debian8;
 
 # Example #3: manual steps, with build
 make img-build DISTRO=debian8;
-make net-create DISTRO=debian8;
 make vol-create DISTRO=debian8;
 make con-create DISTRO=debian8;
 make con-start DISTRO=debian8;
