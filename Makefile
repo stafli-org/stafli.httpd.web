@@ -143,34 +143,34 @@ purge:
 		@echo Purging containers, networks, volumes and images for debian8...
 		bash -c "(cd debian8; set -o allexport; source .env; set +o allexport; docker-compose down)";
 		docker volume rm debian8_web_data;
-		docker image rm stafli/stafli.httpd.web:debian8_httpd24_web;
+		docker image rm stafli/stafli.httpd.web:debian8_httpd24;
 		@echo
 		@echo Purging containers, networks, volumes and images for debian7...
 		bash -c "(cd debian7; set -o allexport; source .env; set +o allexport; docker-compose down)";
 		docker volume rm debian7_web_data;
-		docker image rm stafli/stafli.httpd.web:debian7_httpd22_web;
+		docker image rm stafli/stafli.httpd.web:debian7_httpd22;
 		@echo
 		@echo Purging containers, networks, volumes and images for centos7...
 		bash -c "(cd centos7; set -o allexport; source .env; set +o allexport; docker-compose down)";
 		docker volume rm centos7_web_data;
-		docker image rm stafli/stafli.httpd.web:centos7_httpd24_web;
+		docker image rm stafli/stafli.httpd.web:centos7_httpd24;
 		@echo
 		@echo Purging containers, networks, volumes and images for centos6...
 		bash -c "(cd centos6; set -o allexport; source .env; set +o allexport; docker-compose down)";
 		docker volume rm centos6_web_data;
-		docker image rm stafli/stafli.httpd.web:centos6_httpd22_web;
+		docker image rm stafli/stafli.httpd.web:centos6_httpd22;
         else
 		@echo Purging containers, networks, volumes and images for $(DISTRO)...
 		bash -c "(cd $(DISTRO); set -o allexport; source .env; set +o allexport; docker-compose down)";
 		docker volume rm $(DISTRO)_web_data;
                 ifeq ($(DISTRO), debian8)
-			docker image rm stafli/stafli.httpd.web:$(DISTRO)_httpd24_web;
+			docker image rm stafli/stafli.httpd.web:$(DISTRO)_httpd24;
                 else ifeq ($(DISTRO), debian7)
-			docker image rm stafli/stafli.httpd.web:$(DISTRO)_httpd22_web;
+			docker image rm stafli/stafli.httpd.web:$(DISTRO)_httpd22;
                 else ifeq ($(DISTRO), centos7)
-			docker image rm stafli/stafli.httpd.web:$(DISTRO)_httpd24_web;
+			docker image rm stafli/stafli.httpd.web:$(DISTRO)_httpd24;
                 else ifeq ($(DISTRO), centos6)
-			docker image rm stafli/stafli.httpd.web:$(DISTRO)_httpd22_web;
+			docker image rm stafli/stafli.httpd.web:$(DISTRO)_httpd22;
                 endif
         endif
 
@@ -247,26 +247,26 @@ img-rm:
 	@echo
         ifeq ($(DISTRO), all)
 		@echo Removing images for debian8...
-		docker image rm stafli/stafli.httpd.web:debian8_httpd24_web;
+		docker image rm stafli/stafli.httpd.web:debian8_httpd24;
 		@echo
 		@echo Removing images for debian7...
-		docker image rm stafli/stafli.httpd.web:debian7_httpd22_web;
+		docker image rm stafli/stafli.httpd.web:debian7_httpd22;
 		@echo
 		@echo Removing images for centos7...
-		docker image rm stafli/stafli.httpd.web:centos7_httpd24_web;
+		docker image rm stafli/stafli.httpd.web:centos7_httpd24;
 		@echo
 		@echo Removing images for centos6...
-		docker image rm stafli/stafli.httpd.web:centos6_httpd22_web;
+		docker image rm stafli/stafli.httpd.web:centos6_httpd22;
         else
 		@echo Removing images for $(DISTRO)...
                 ifeq ($(DISTRO), debian8)
-			docker image rm stafli/stafli.httpd.web:$(DISTRO)_httpd24_web;
+			docker image rm stafli/stafli.httpd.web:$(DISTRO)_httpd24;
                 else ifeq ($(DISTRO), debian7)
-			docker image rm stafli/stafli.httpd.web:$(DISTRO)_httpd22_web;
+			docker image rm stafli/stafli.httpd.web:$(DISTRO)_httpd22;
                 else ifeq ($(DISTRO), centos7)
-			docker image rm stafli/stafli.httpd.web:$(DISTRO)_httpd24_web;
+			docker image rm stafli/stafli.httpd.web:$(DISTRO)_httpd24;
                 else ifeq ($(DISTRO), centos6)
-			docker image rm stafli/stafli.httpd.web:$(DISTRO)_httpd22_web;
+			docker image rm stafli/stafli.httpd.web:$(DISTRO)_httpd22;
                 endif
         endif
 
@@ -453,26 +453,26 @@ con-inspect:
 	@echo
         ifeq ($(DISTRO), all)
 		@echo Inspecting containers for debian8...
-		docker container inspect debian8_httpd24_web_1;
+		docker container inspect debian8_httpd24_1;
 		@echo
 		@echo Inspecting containers for debian7...
-		docker container inspect debian7_httpd22_web_1;
+		docker container inspect debian7_httpd22_1;
 		@echo
 		@echo Inspecting containers for centos7...
-		docker container inspect centos7_httpd24_web_1;
+		docker container inspect centos7_httpd24_1;
 		@echo
 		@echo Inspecting containers for centos6...
-		docker container inspect centos6_httpd22_web_1;
+		docker container inspect centos6_httpd22_1;
         else
 		@echo Inspecting containers for $(DISTRO)...
                 ifeq ($(DISTRO), debian8)
-			docker container inspect $(DISTRO)_httpd24_web_1;
+			docker container inspect $(DISTRO)_httpd24_1;
                 else ifeq ($(DISTRO), debian7)
-			docker container inspect $(DISTRO)_httpd22_web_1;
+			docker container inspect $(DISTRO)_httpd22_1;
                 else ifeq ($(DISTRO), centos7)
-			docker container inspect $(DISTRO)_httpd24_web_1;
+			docker container inspect $(DISTRO)_httpd24_1;
                 else ifeq ($(DISTRO), centos6)
-			docker container inspect $(DISTRO)_httpd22_web_1;
+			docker container inspect $(DISTRO)_httpd22_1;
                 endif
         endif
 
@@ -482,26 +482,26 @@ con-ips:
 	@echo
         ifeq ($(DISTRO), all)
 		@echo Showing IP addresses of containers for debian8...
-		docker container inspect debian8_httpd24_web_1 | grep -e "inspect" -e "\"NetworkID\"" -B 0 -A 8;
+		docker container inspect debian8_httpd24_1 | grep -e "inspect" -e "\"NetworkID\"" -B 0 -A 8;
 		@echo
 		@echo Showing IP addresses of containers for debian7...
-		docker container inspect debian7_httpd22_web_1 | grep -e "inspect" -e "\"NetworkID\"" -B 0 -A 8;
+		docker container inspect debian7_httpd22_1 | grep -e "inspect" -e "\"NetworkID\"" -B 0 -A 8;
 		@echo
 		@echo Showing IP addresses of containers for centos7...
-		docker container inspect centos7_httpd24_web_1 | grep -e "inspect" -e "\"NetworkID\"" -B 0 -A 8;
+		docker container inspect centos7_httpd24_1 | grep -e "inspect" -e "\"NetworkID\"" -B 0 -A 8;
 		@echo
 		@echo Showing IP addresses of containers for centos6...
-		docker container inspect centos6_httpd22_web_1 | grep -e "inspect" -e "\"NetworkID\"" -B 0 -A 8;
+		docker container inspect centos6_httpd22_1 | grep -e "inspect" -e "\"NetworkID\"" -B 0 -A 8;
         else
 		@echo Showing IP addresses of containers for $(DISTRO)...
                 ifeq ($(DISTRO), debian8)
-			docker container inspect $(DISTRO)_httpd24_web_1 | grep -e "inspect" -e "\"NetworkID\"" -B 0 -A 8;
+			docker container inspect $(DISTRO)_httpd24_1 | grep -e "inspect" -e "\"NetworkID\"" -B 0 -A 8;
                 else ifeq ($(DISTRO), debian7)
-			docker container inspect $(DISTRO)_httpd22_web_1 | grep -e "inspect" -e "\"NetworkID\"" -B 0 -A 8;
+			docker container inspect $(DISTRO)_httpd22_1 | grep -e "inspect" -e "\"NetworkID\"" -B 0 -A 8;
                 else ifeq ($(DISTRO), centos7)
-			docker container inspect $(DISTRO)_httpd24_web_1 | grep -e "inspect" -e "\"NetworkID\"" -B 0 -A 8;
+			docker container inspect $(DISTRO)_httpd24_1 | grep -e "inspect" -e "\"NetworkID\"" -B 0 -A 8;
                 else ifeq ($(DISTRO), centos6)
-			docker container inspect $(DISTRO)_httpd22_web_1 | grep -e "inspect" -e "\"NetworkID\"" -B 0 -A 8;
+			docker container inspect $(DISTRO)_httpd22_1 | grep -e "inspect" -e "\"NetworkID\"" -B 0 -A 8;
                 endif
         endif
 
@@ -512,26 +512,26 @@ con-ports:
 	@echo
         ifeq ($(DISTRO), all)
 		@echo Showing ports of containers for debian8...
-		docker container port debian8_httpd24_web_1;
+		docker container port debian8_httpd24_1;
 		@echo
 		@echo Showing ports of containers for debian7...
-		docker container port debian7_httpd22_web_1;
+		docker container port debian7_httpd22_1;
 		@echo
 		@echo Showing ports of containers for centos7...
-		docker container port centos7_httpd24_web_1;
+		docker container port centos7_httpd24_1;
 		@echo
 		@echo Showing ports of containers for centos6...
-		docker container port centos6_httpd22_web_1;
+		docker container port centos6_httpd22_1;
         else
 		@echo Showing ports of containers for $(DISTRO)...
                 ifeq ($(DISTRO), debian8)
-			docker container port $(DISTRO)_httpd24_web_1;
+			docker container port $(DISTRO)_httpd24_1;
                 else ifeq ($(DISTRO), debian7)
-			docker container port $(DISTRO)_httpd22_web_1;
+			docker container port $(DISTRO)_httpd22_1;
                 else ifeq ($(DISTRO), centos7)
-			docker container port $(DISTRO)_httpd24_web_1;
+			docker container port $(DISTRO)_httpd24_1;
                 else ifeq ($(DISTRO), centos6)
-			docker container port $(DISTRO)_httpd22_web_1;
+			docker container port $(DISTRO)_httpd22_1;
                 endif
         endif
 
@@ -542,26 +542,26 @@ con-top:
 	@echo
         ifeq ($(DISTRO), all)
 		@echo Showing processes of containers for debian8...
-		docker container top debian8_httpd24_web_1;
+		docker container top debian8_httpd24_1;
 		@echo
 		@echo Showing processes of containers for debian7...
-		docker container top debian7_httpd22_web_1;
+		docker container top debian7_httpd22_1;
 		@echo
 		@echo Showing processes of containers for centos7...
-		docker container top centos7_httpd24_web_1;
+		docker container top centos7_httpd24_1;
 		@echo
 		@echo Showing processes of containers for centos6...
-		docker container top centos6_httpd22_web_1;
+		docker container top centos6_httpd22_1;
         else
 		@echo Showing processes of containers for $(DISTRO)...
                 ifeq ($(DISTRO), debian8)
-			docker container top $(DISTRO)_httpd24_web_1;
+			docker container top $(DISTRO)_httpd24_1;
                 else ifeq ($(DISTRO), debian7)
-			docker container top $(DISTRO)_httpd22_web_1;
+			docker container top $(DISTRO)_httpd22_1;
                 else ifeq ($(DISTRO), centos7)
-			docker container top $(DISTRO)_httpd24_web_1;
+			docker container top $(DISTRO)_httpd24_1;
                 else ifeq ($(DISTRO), centos6)
-			docker container top $(DISTRO)_httpd22_web_1;
+			docker container top $(DISTRO)_httpd22_1;
                 endif
         endif
 

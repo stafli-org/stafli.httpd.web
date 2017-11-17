@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-#    Debian 8 (jessie) HTTPd24 Web Server (shellfile)
+#    Debian 7 (wheezy) HTTPd22 Web Server (shellfile)
 #    Copyright (C) 2016-2017 Stafli
 #    Luís Pedro Algarvio
 #    This file is part of the Stafli Application Stack.
@@ -28,15 +28,15 @@ alias RUN='';
 shopt -s expand_aliases;
 
 # Load dockerfile
-source "$(dirname $(readlink -f $0))/../dockerfiles/httpd24-web.dockerfile";
+source "$(dirname $(readlink -f $0))/../dockerfiles/httpd22.dockerfile";
 
 #
 # Configuration
 #
 
 # Enable daemon
-systemctl enable apache2.service;
+update-rc.d apache2 enable;
 
 # Start daemon
-systemctl restart apache2.service;
+service apache2 restart;
 

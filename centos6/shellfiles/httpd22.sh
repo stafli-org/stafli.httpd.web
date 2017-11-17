@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-#    CentOS 7 (centos7) HTTPd24 Web Server (shellfile)
+#    CentOS 6 (centos6) HTTPd22 Web Server (shellfile)
 #    Copyright (C) 2016-2017 Stafli
 #    Luís Pedro Algarvio
 #    This file is part of the Stafli Application Stack.
@@ -28,15 +28,15 @@ alias RUN='';
 shopt -s expand_aliases;
 
 # Load dockerfile
-source "$(dirname $(readlink -f $0))/../dockerfiles/httpd24-web.dockerfile";
+source "$(dirname $(readlink -f $0))/../dockerfiles/httpd22.dockerfile";
 
 #
 # Configuration
 #
 
 # Enable daemon
-systemctl enable httpd.service;
+chkconfig httpd on;
 
 # Start daemon
-systemctl restart httpd.service;
+service httpd restart;
 

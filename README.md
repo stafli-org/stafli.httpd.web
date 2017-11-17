@@ -28,18 +28,18 @@ These are the services described by the dockerfile and docker-compose files:
 ## Images
 These are the [resulting images](https://hub.docker.com/r/stafli/stafli.httpd.web/tags/) upon building:
 - 2.2.x/2.4.x Web:
-  - stafli/stafli.httpd.web:debian8_httpd24_web
-  - stafli/stafli.httpd.web:debian7_httpd22_web
-  - stafli/stafli.httpd.web:centos7_httpd24_web
-  - stafli/stafli.httpd.web:centos6_httpd22_web
+  - stafli/stafli.httpd.web:debian8_httpd24
+  - stafli/stafli.httpd.web:debian7_httpd22
+  - stafli/stafli.httpd.web:centos7_httpd24
+  - stafli/stafli.httpd.web:centos6_httpd22
 
 ## Containers
 These containers can be created from the images:
 - 2.2.x/2.4.x Web:
-  - debian8_httpd24_web_xxx
-  - debian7_httpd22_web_xxx
-  - centos7_httpd24_web_xxx
-  - centos6_httpd22_web_xxx
+  - debian8_httpd24_xxx
+  - debian7_httpd22_xxx
+  - centos7_httpd24_xxx
+  - centos6_httpd22_xxx
 
 ## Usage
 
@@ -56,9 +56,9 @@ Where <image_url> is the full image url (lookup the image list above).
 
 Example:
 ```
-docker pull stafli/stafli.httpd.web:debian8_httpd24_web
+docker pull stafli/stafli.httpd.web:debian8_httpd24
 
-docker run -ti stafli/stafli.httpd.web:debian8_httpd24_web /bin/bash
+docker run -ti stafli/stafli.httpd.web:debian8_httpd24 /bin/bash
 ```
 
 ### From GitHub repository (automated)

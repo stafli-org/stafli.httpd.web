@@ -27,7 +27,7 @@ version: '2'
 #
 services:
 
-  httpd22_web:
+  httpd22:
     labels:
       - "org.label-schema.schema-version=1.0"
       - "org.label-schema.name=$PROJECT_NAME"
@@ -54,10 +54,10 @@ services:
       - "org.label-schema.os-architecture=$BUILD_ARCH"
       - "org.label-schema.version=$BUILD_VERSION"
       - "org.label-schema.build-date=$BUILD_DATE"
-    image: "stafli/stafli.httpd.web:debian7_httpd22_web"
+    image: "stafli/stafli.httpd.web:debian7_httpd22"
     build:
       context: "./dockerfiles"
-      dockerfile: "httpd22-web.dockerfile"
+      dockerfile: "httpd22.dockerfile"
       args:
         app_httpd_global_mods_core_dis: "asis auth_digest authn_anon authn_dbd authn_dbm authnz_ldap authz_dbm authz_owner cache cern_meta cgi cgid charset_lite dav_fs dav dav_lock dbd disk_cache dump_io ext_filter file_cache filter ident imagemap include ldap log_forensic mem_cache mime_magic negotiation proxy_balancer proxy_connect proxy_ftp proxy_scgi reqtimeout speling substitute suexec unique_id userdir usertrack vhost_alias"
         app_httpd_global_mods_core_en: "alias dir autoindex mime setenvif env expires headers deflate rewrite actions authn_default authn_alias authn_file authz_default authz_groupfile authz_host authz_user auth_basic ssl proxy proxy_ajp proxy_http info status"
