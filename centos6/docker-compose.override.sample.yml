@@ -27,7 +27,7 @@ version: '2'
 #
 services:
 
-  httpd22:
+  centos6_httpd22_web:
     build:
       args:
         app_httpd_global_listen_port_http: "8080"

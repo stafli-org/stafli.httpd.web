@@ -27,7 +27,7 @@ version: '2'
 #
 services:
 
-  httpd24:
+  centos7_httpd24_web:
     build:
       args:
         app_httpd_global_listen_port_http: "8080"

@@ -27,7 +27,7 @@ version: '2'
 #
 services:
 
-  httpd22:
+  debian7_httpd22_web:
     labels:
       - "org.label-schema.schema-version=1.0"
       - "org.label-schema.name=$PROJECT_NAME"
@@ -54,7 +54,7 @@ services:
       - "org.label-schema.os-architecture=$BUILD_ARCH"
       - "org.label-schema.version=$BUILD_VERSION"
       - "org.label-schema.build-date=$BUILD_DATE"
-    image: "stafli/stafli.httpd.web:debian7_httpd22"
+    image: "${IMAGE_URL_PREFIX}:debian7_httpd22"
     build:
       context: "./dockerfiles"
       dockerfile: "httpd22.dockerfile"
@@ -87,7 +87,7 @@ services:
     logging:
       driver: "json-file"
     volumes:
-      - web_data:/var/www
+      - debian7_httpd22_web_data:/var/www
     ports:
       - "80"
       - "443"
@@ -98,6 +98,6 @@ services:
 # Volumes
 #
 volumes:
-  web_data:
+  debian7_httpd22_web_data:
     driver: "local"
 
