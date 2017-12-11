@@ -142,38 +142,38 @@ purge:
         ifeq ($(DISTRO), all)
 		@echo Purging containers, networks, volumes and images for debian8...
 		bash -c "(cd debian8; set -o allexport; source .env; set +o allexport; docker-compose down)";
-		docker volume rm stafli_debian8_httpd24_web_data;
-		docker image rm stafli/stafli.httpd.web:debian8_httpd24;
+		docker volume rm stafli_web_httpd24_debian8_data;
+		docker image rm stafli/stafli.web.httpd:httpd24_debian8;
 		@echo
 		@echo Purging containers, networks, volumes and images for debian7...
 		bash -c "(cd debian7; set -o allexport; source .env; set +o allexport; docker-compose down)";
-		docker volume rm stafli_debian7_httpd22_web_data;
-		docker image rm stafli/stafli.httpd.web:debian7_httpd22;
+		docker volume rm stafli_web_httpd22_debian7_data;
+		docker image rm stafli/stafli.web.httpd:httpd22_debian7;
 		@echo
 		@echo Purging containers, networks, volumes and images for centos7...
 		bash -c "(cd centos7; set -o allexport; source .env; set +o allexport; docker-compose down)";
-		docker volume rm stafli_centos7_httpd24_web_data;
-		docker image rm stafli/stafli.httpd.web:centos7_httpd24;
+		docker volume rm stafli_web_httpd24_centos7_data;
+		docker image rm stafli/stafli.web.httpd:httpd24_centos7;
 		@echo
 		@echo Purging containers, networks, volumes and images for centos6...
 		bash -c "(cd centos6; set -o allexport; source .env; set +o allexport; docker-compose down)";
-		docker volume rm stafli_centos6_httpd22_web_data;
-		docker image rm stafli/stafli.httpd.web:centos6_httpd22;
+		docker volume rm stafli_web_httpd22_centos6_data;
+		docker image rm stafli/stafli.web.httpd:httpd22_centos6;
         else
 		@echo Purging containers, networks, volumes and images for $(DISTRO)...
 		bash -c "(cd $(DISTRO); set -o allexport; source .env; set +o allexport; docker-compose down)";
                 ifeq ($(DISTRO), debian8)
-			docker volume rm stafli_$(DISTRO)_httpd24_web_data;
-			docker image rm stafli/stafli.httpd.web:$(DISTRO)_httpd24;
+			docker volume rm stafli_web_httpd24_$(DISTRO)_data;
+			docker image rm stafli/stafli.web.httpd:httpd24_$(DISTRO);
                 else ifeq ($(DISTRO), debian7)
-			docker volume rm stafli_$(DISTRO)_httpd22_web_data;
-			docker image rm stafli/stafli.httpd.web:$(DISTRO)_httpd22;
+			docker volume rm stafli_web_httpd22_$(DISTRO)_data;
+			docker image rm stafli/stafli.web.httpd:httpd22_$(DISTRO);
                 else ifeq ($(DISTRO), centos7)
-			docker volume rm stafli_$(DISTRO)_httpd24_web_data;
-			docker image rm stafli/stafli.httpd.web:$(DISTRO)_httpd24;
+			docker volume rm stafli_web_httpd24_$(DISTRO)_data;
+			docker image rm stafli/stafli.web.httpd:httpd24_$(DISTRO);
                 else ifeq ($(DISTRO), centos6)
-			docker volume rm stafli_$(DISTRO)_httpd22_web_data;
-			docker image rm stafli/stafli.httpd.web:$(DISTRO)_httpd22;
+			docker volume rm stafli_web_httpd22_$(DISTRO)_data;
+			docker image rm stafli/stafli.web.httpd:httpd22_$(DISTRO);
                 endif
         endif
 
@@ -184,19 +184,19 @@ img-ls:
 	@echo
         ifeq ($(DISTRO), all)
 		@echo Listing images for debian8...
-		docker image ls | grep -E "stafli/stafli.httpd.web.*debian8" | sort -n;
+		docker image ls | grep -E "stafli/stafli.web.httpd.*debian8" | sort -n;
 		@echo
 		@echo Listing images for debian7...
-		docker image ls | grep -E "stafli/stafli.httpd.web.*debian7" | sort -n;
+		docker image ls | grep -E "stafli/stafli.web.httpd.*debian7" | sort -n;
 		@echo
 		@echo Listing images for centos7...
-		docker image ls | grep -E "stafli/stafli.httpd.web.*centos7" | sort -n;
+		docker image ls | grep -E "stafli/stafli.web.httpd.*centos7" | sort -n;
 		@echo
 		@echo Listing images for centos6...
-		docker image ls | grep -E "stafli/stafli.httpd.web.*centos6" | sort -n;
+		docker image ls | grep -E "stafli/stafli.web.httpd.*centos6" | sort -n;
         else
 		@echo Listing images for $(DISTRO)...
-		docker image ls | grep -E "stafli/stafli.httpd.web.*$(DISTRO)" | sort -n;
+		docker image ls | grep -E "stafli/stafli.web.httpd.*$(DISTRO)" | sort -n;
         endif
 
 
@@ -250,26 +250,26 @@ img-rm:
 	@echo
         ifeq ($(DISTRO), all)
 		@echo Removing images for debian8...
-		docker image rm stafli/stafli.httpd.web:debian8_httpd24;
+		docker image rm stafli/stafli.web.httpd:httpd24_debian8;
 		@echo
 		@echo Removing images for debian7...
-		docker image rm stafli/stafli.httpd.web:debian7_httpd22;
+		docker image rm stafli/stafli.web.httpd:httpd22_debian7;
 		@echo
 		@echo Removing images for centos7...
-		docker image rm stafli/stafli.httpd.web:centos7_httpd24;
+		docker image rm stafli/stafli.web.httpd:httpd24_centos7;
 		@echo
 		@echo Removing images for centos6...
-		docker image rm stafli/stafli.httpd.web:centos6_httpd22;
+		docker image rm stafli/stafli.web.httpd:httpd22_centos6;
         else
 		@echo Removing images for $(DISTRO)...
                 ifeq ($(DISTRO), debian8)
-			docker image rm stafli/stafli.httpd.web:$(DISTRO)_httpd24;
+			docker image rm stafli/stafli.web.httpd:httpd24_$(DISTRO);
                 else ifeq ($(DISTRO), debian7)
-			docker image rm stafli/stafli.httpd.web:$(DISTRO)_httpd22;
+			docker image rm stafli/stafli.web.httpd:httpd22_$(DISTRO);
                 else ifeq ($(DISTRO), centos7)
-			docker image rm stafli/stafli.httpd.web:$(DISTRO)_httpd24;
+			docker image rm stafli/stafli.web.httpd:httpd24_$(DISTRO);
                 else ifeq ($(DISTRO), centos6)
-			docker image rm stafli/stafli.httpd.web:$(DISTRO)_httpd22;
+			docker image rm stafli/stafli.web.httpd:httpd22_$(DISTRO);
                 endif
         endif
 
@@ -456,26 +456,26 @@ con-inspect:
 	@echo
         ifeq ($(DISTRO), all)
 		@echo Inspecting containers for debian8...
-		docker container inspect stafli_debian8_httpd24_web_1;
+		docker container inspect stafli_web_httpd24_debian8_1;
 		@echo
 		@echo Inspecting containers for debian7...
-		docker container inspect stafli_debian7_httpd22_web_1;
+		docker container inspect stafli_web_httpd22_debian7_1;
 		@echo
 		@echo Inspecting containers for centos7...
-		docker container inspect stafli_centos7_httpd24_web_1;
+		docker container inspect stafli_web_httpd24_centos7_1;
 		@echo
 		@echo Inspecting containers for centos6...
-		docker container inspect stafli_centos6_httpd22_web_1;
+		docker container inspect stafli_web_httpd22_centos6_1;
         else
 		@echo Inspecting containers for $(DISTRO)...
                 ifeq ($(DISTRO), debian8)
-			docker container inspect stafli_$(DISTRO)_httpd24_web_1;
+			docker container inspect stafli_web_httpd24_$(DISTRO)_1;
                 else ifeq ($(DISTRO), debian7)
-			docker container inspect stafli_$(DISTRO)_httpd22_web_1;
+			docker container inspect stafli_web_httpd22_$(DISTRO)_1;
                 else ifeq ($(DISTRO), centos7)
-			docker container inspect stafli_$(DISTRO)_httpd24_web_1;
+			docker container inspect stafli_web_httpd24_$(DISTRO)_1;
                 else ifeq ($(DISTRO), centos6)
-			docker container inspect stafli_$(DISTRO)_httpd22_web_1;
+			docker container inspect stafli_web_httpd22_$(DISTRO)_1;
                 endif
         endif
 
@@ -485,26 +485,26 @@ con-ips:
 	@echo
         ifeq ($(DISTRO), all)
 		@echo Showing IP addresses of containers for debian8...
-		docker container inspect stafli_debian8_httpd24_web_1 | grep -e "inspect" -e "\"NetworkID\"" -B 0 -A 8;
+		docker container inspect stafli_web_httpd24_debian8_1 | grep -e "inspect" -e "\"NetworkID\"" -B 0 -A 8;
 		@echo
 		@echo Showing IP addresses of containers for debian7...
-		docker container inspect stafli_debian7_httpd22_web_1 | grep -e "inspect" -e "\"NetworkID\"" -B 0 -A 8;
+		docker container inspect stafli_web_httpd22_debian7_1 | grep -e "inspect" -e "\"NetworkID\"" -B 0 -A 8;
 		@echo
 		@echo Showing IP addresses of containers for centos7...
-		docker container inspect stafli_centos7_httpd24_web_1 | grep -e "inspect" -e "\"NetworkID\"" -B 0 -A 8;
+		docker container inspect stafli_web_httpd24_centos7_1 | grep -e "inspect" -e "\"NetworkID\"" -B 0 -A 8;
 		@echo
 		@echo Showing IP addresses of containers for centos6...
-		docker container inspect stafli_centos6_httpd22_web_1 | grep -e "inspect" -e "\"NetworkID\"" -B 0 -A 8;
+		docker container inspect stafli_web_httpd22_centos6_1 | grep -e "inspect" -e "\"NetworkID\"" -B 0 -A 8;
         else
 		@echo Showing IP addresses of containers for $(DISTRO)...
                 ifeq ($(DISTRO), debian8)
-			docker container inspect stafli_$(DISTRO)_httpd24_web_1 | grep -e "inspect" -e "\"NetworkID\"" -B 0 -A 8;
+			docker container inspect stafli_web_httpd24_$(DISTRO)_1 | grep -e "inspect" -e "\"NetworkID\"" -B 0 -A 8;
                 else ifeq ($(DISTRO), debian7)
-			docker container inspect stafli_$(DISTRO)_httpd22_web_1 | grep -e "inspect" -e "\"NetworkID\"" -B 0 -A 8;
+			docker container inspect stafli_web_httpd22_$(DISTRO)_1 | grep -e "inspect" -e "\"NetworkID\"" -B 0 -A 8;
                 else ifeq ($(DISTRO), centos7)
-			docker container inspect stafli_$(DISTRO)_httpd24_web_1 | grep -e "inspect" -e "\"NetworkID\"" -B 0 -A 8;
+			docker container inspect stafli_web_httpd24_$(DISTRO)_1 | grep -e "inspect" -e "\"NetworkID\"" -B 0 -A 8;
                 else ifeq ($(DISTRO), centos6)
-			docker container inspect stafli_$(DISTRO)_httpd22_web_1 | grep -e "inspect" -e "\"NetworkID\"" -B 0 -A 8;
+			docker container inspect stafli_web_httpd22_$(DISTRO)_1 | grep -e "inspect" -e "\"NetworkID\"" -B 0 -A 8;
                 endif
         endif
 
@@ -515,26 +515,26 @@ con-ports:
 	@echo
         ifeq ($(DISTRO), all)
 		@echo Showing ports of containers for debian8...
-		docker container port stafli_debian8_httpd24_web_1;
+		docker container port stafli_web_httpd24_debian8_1;
 		@echo
 		@echo Showing ports of containers for debian7...
-		docker container port stafli_debian7_httpd22_web_1;
+		docker container port stafli_web_httpd22_debian7_1;
 		@echo
 		@echo Showing ports of containers for centos7...
-		docker container port stafli_centos7_httpd24_web_1;
+		docker container port stafli_web_httpd24_centos7_1;
 		@echo
 		@echo Showing ports of containers for centos6...
-		docker container port stafli_centos6_httpd22_web_1;
+		docker container port stafli_web_httpd22_centos6_1;
         else
 		@echo Showing ports of containers for $(DISTRO)...
                 ifeq ($(DISTRO), debian8)
-			docker container port stafli_$(DISTRO)_httpd24_web_1;
+			docker container port stafli_web_httpd24_$(DISTRO)_1;
                 else ifeq ($(DISTRO), debian7)
-			docker container port stafli_$(DISTRO)_httpd22_web_1;
+			docker container port stafli_web_httpd22_$(DISTRO)_1;
                 else ifeq ($(DISTRO), centos7)
-			docker container port stafli_$(DISTRO)_httpd24_web_1;
+			docker container port stafli_web_httpd24_$(DISTRO)_1;
                 else ifeq ($(DISTRO), centos6)
-			docker container port stafli_$(DISTRO)_httpd22_web_1;
+			docker container port stafli_web_httpd22_$(DISTRO)_1;
                 endif
         endif
 
@@ -545,26 +545,26 @@ con-top:
 	@echo
         ifeq ($(DISTRO), all)
 		@echo Showing processes of containers for debian8...
-		docker container top stafli_debian8_httpd24_web_1;
+		docker container top stafli_web_httpd24_debian8_1;
 		@echo
 		@echo Showing processes of containers for debian7...
-		docker container top stafli_debian7_httpd22_web_1;
+		docker container top stafli_web_httpd22_debian7_1;
 		@echo
 		@echo Showing processes of containers for centos7...
-		docker container top stafli_centos7_httpd24_web_1;
+		docker container top stafli_web_httpd24_centos7_1;
 		@echo
 		@echo Showing processes of containers for centos6...
-		docker container top stafli_centos6_httpd22_web_1;
+		docker container top stafli_web_httpd22_centos6_1;
         else
 		@echo Showing processes of containers for $(DISTRO)...
                 ifeq ($(DISTRO), debian8)
-			docker container top stafli_$(DISTRO)_httpd24_web_1;
+			docker container top stafli_web_httpd24_$(DISTRO)_1;
                 else ifeq ($(DISTRO), debian7)
-			docker container top stafli_$(DISTRO)_httpd22_web_1;
+			docker container top stafli_web_httpd22_$(DISTRO)_1;
                 else ifeq ($(DISTRO), centos7)
-			docker container top stafli_$(DISTRO)_httpd24_web_1;
+			docker container top stafli_web_httpd24_$(DISTRO)_1;
                 else ifeq ($(DISTRO), centos6)
-			docker container top stafli_$(DISTRO)_httpd22_web_1;
+			docker container top stafli_web_httpd22_$(DISTRO)_1;
                 endif
         endif
 
@@ -641,26 +641,26 @@ vol-create:
 	@echo
         ifeq ($(DISTRO), all)
 		@echo Creating volumes for debian8...
-		docker volume create --driver local --name stafli_debian8_httpd24_web_data;
+		docker volume create --driver local --name stafli_web_httpd24_debian8_data;
 		@echo
 		@echo Creating volumes for debian7...
-		docker volume create --driver local --name stafli_debian7_httpd22_web_data;
+		docker volume create --driver local --name stafli_web_httpd22_debian7_data;
 		@echo
 		@echo Creating volumes for centos7...
-		docker volume create --driver local --name stafli_centos7_httpd24_web_data;
+		docker volume create --driver local --name stafli_web_httpd24_centos7_data;
 		@echo
 		@echo Creating volumes for centos6...
-		docker volume create --driver local --name stafli_centos6_httpd22_web_data;
+		docker volume create --driver local --name stafli_web_httpd22_centos6_data;
         else
 		@echo Creating volumes for $(DISTRO)...
                 ifeq ($(DISTRO), debian8)
-			docker volume create --driver local --name stafli_$(DISTRO)_httpd24_web_data;
+			docker volume create --driver local --name stafli_web_httpd24_$(DISTRO)_data;
                 else ifeq ($(DISTRO), debian7)
-			docker volume create --driver local --name stafli_$(DISTRO)_httpd22_web_data;
+			docker volume create --driver local --name stafli_web_httpd22_$(DISTRO)_data;
                 else ifeq ($(DISTRO), centos7)
-			docker volume create --driver local --name stafli_$(DISTRO)_httpd24_web_data;
+			docker volume create --driver local --name stafli_web_httpd24_$(DISTRO)_data;
                 else ifeq ($(DISTRO), centos6)
-			docker volume create --driver local --name stafli_$(DISTRO)_httpd22_web_data;
+			docker volume create --driver local --name stafli_web_httpd22_$(DISTRO)_data;
                 endif
         endif
 
@@ -671,26 +671,26 @@ vol-rm:
 	@echo
         ifeq ($(DISTRO), all)
 		@echo Removing volumes for debian8...
-		docker volume rm stafli_debian8_httpd24_web_data;
+		docker volume rm stafli_web_httpd24_debian8_data;
 		@echo
 		@echo Removing volumes for debian7...
-		docker volume rm stafli_debian7_httpd22_web_data;
+		docker volume rm stafli_web_httpd22_debian7_data;
 		@echo
 		@echo Removing volumes for centos7...
-		docker volume rm stafli_centos7_httpd24_web_data;
+		docker volume rm stafli_web_httpd24_centos7_data;
 		@echo
 		@echo Removing volumes for centos6...
-		docker volume rm stafli_centos6_httpd22_web_data;
+		docker volume rm stafli_web_httpd22_centos6_data;
         else
 		@echo Removing volumes for $(DISTRO)...
                 ifeq ($(DISTRO), debian8)
-			docker volume rm stafli_$(DISTRO)_httpd24_web_data;
+			docker volume rm stafli_web_httpd24_$(DISTRO)_data;
                 else ifeq ($(DISTRO), debian7)
-			docker volume rm stafli_$(DISTRO)_httpd22_web_data;
+			docker volume rm stafli_web_httpd22_$(DISTRO)_data;
                 else ifeq ($(DISTRO), centos7)
-			docker volume rm stafli_$(DISTRO)_httpd24_web_data;
+			docker volume rm stafli_web_httpd24_$(DISTRO)_data;
                 else ifeq ($(DISTRO), centos6)
-			docker volume rm stafli_$(DISTRO)_httpd22_web_data;
+			docker volume rm stafli_web_httpd22_$(DISTRO)_data;
                 endif
         endif
 
@@ -701,26 +701,26 @@ vol-inspect:
 	@echo
         ifeq ($(DISTRO), all)
 		@echo Inspecting volumes for debian8...
-		docker volume inspect stafli_debian8_httpd24_web_data;
+		docker volume inspect stafli_web_httpd24_debian8_data;
 		@echo
 		@echo Inspecting volumes for debian7...
-		docker volume inspect stafli_debian7_httpd22_web_data;
+		docker volume inspect stafli_web_httpd22_debian7_data;
 		@echo
 		@echo Inspecting volumes for centos7...
-		docker volume inspect stafli_centos7_httpd24_web_data;
+		docker volume inspect stafli_web_httpd24_centos7_data;
 		@echo
 		@echo Inspecting volumes for centos6...
-		docker volume inspect stafli_centos6_httpd22_web_data;
+		docker volume inspect stafli_web_httpd22_centos6_data;
         else
 		@echo Inspecting volumes for $(DISTRO)...
                 ifeq ($(DISTRO), debian8)
-			docker volume inspect stafli_$(DISTRO)_httpd24_web_data;
+			docker volume inspect stafli_web_httpd24_$(DISTRO)_data;
                 else ifeq ($(DISTRO), debian7)
-			docker volume inspect stafli_$(DISTRO)_httpd22_web_data;
+			docker volume inspect stafli_web_httpd22_$(DISTRO)_data;
                 else ifeq ($(DISTRO), centos7)
-			docker volume inspect stafli_$(DISTRO)_httpd24_web_data;
+			docker volume inspect stafli_web_httpd24_$(DISTRO)_data;
                 else ifeq ($(DISTRO), centos6)
-			docker volume inspect stafli_$(DISTRO)_httpd22_web_data;
+			docker volume inspect stafli_web_httpd22_$(DISTRO)_data;
                 endif
         endif
 

@@ -27,7 +27,7 @@ version: '2'
 #
 services:
 
-  centos6_httpd22_web:
+  web_httpd22_centos6:
     labels:
       - "org.label-schema.schema-version=1.0"
       - "org.label-schema.name=$PROJECT_NAME"
@@ -54,7 +54,7 @@ services:
       - "org.label-schema.os-architecture=$BUILD_ARCH"
       - "org.label-schema.version=$BUILD_VERSION"
       - "org.label-schema.build-date=$BUILD_DATE"
-    image: "${IMAGE_URL_PREFIX}:centos6_httpd22"
+    image: "${IMAGE_URL_PREFIX}:httpd22_centos6"
     build:
       context: "./dockerfiles"
       dockerfile: "httpd22.dockerfile"
@@ -82,12 +82,12 @@ services:
         app_httpd_vhost_listen_port_https: "443"
         app_httpd_vhost_httpd_wlist: "127.0.0.1 10.0.0.0/8 172.16.0.0/12 192.168.0.0/16"
         app_httpd_vhost_fpm_wlist: "127.0.0.1 10.0.0.0/8 172.16.0.0/12 192.168.0.0/16"
-        app_httpd_vhost_fpm_addr: "centos6_php56_1"
+        app_httpd_vhost_fpm_addr: "stafli_language_php56_centos6_1"
         app_httpd_vhost_fpm_port: "9000"
     logging:
       driver: "json-file"
     volumes:
-      - centos6_httpd22_web_data:/var/www
+      - web_httpd22_centos6_data:/var/www
     ports:
       - "80"
       - "443"
@@ -98,6 +98,6 @@ services:
 # Volumes
 #
 volumes:
-  centos6_httpd22_web_data:
+  web_httpd22_centos6_data:
     driver: "local"
 

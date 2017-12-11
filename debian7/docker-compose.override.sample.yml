@@ -27,7 +27,7 @@ version: '2'
 #
 services:
 
-  debian7_httpd22_web:
+  web_httpd22_debian7:
     build:
       args:
         app_httpd_global_listen_port_http: "8080"
