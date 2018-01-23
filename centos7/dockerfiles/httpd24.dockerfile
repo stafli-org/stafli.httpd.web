@@ -24,14 +24,14 @@
 #
 
 # Base image to use
-FROM stafli/stafli.system.base:base10_centos7
+FROM stafli/stafli.init.supervisor:supervisor31_centos7
 
 # Labels to apply
-LABEL description="Stafli HTTP Web Server (stafli/stafli.web.httpd), Based on Stafli Base System (stafli/stafli.system.base)" \
+LABEL description="Stafli HTTP Web Server (stafli/stafli.web.httpd), Based on Stafli Supervisor Init (stafli/stafli.init.supervisor)" \
       maintainer="lp@algarvio.org" \
       org.label-schema.schema-version="1.0.0-rc.1" \
       org.label-schema.name="Stafli HTTP Web Server (stafli/stafli.web.httpd)" \
-      org.label-schema.description="Based on Stafli Base System (stafli/stafli.system.base)" \
+      org.label-schema.description="Based on Stafli Supervisor Init (stafli/stafli.init.supervisor)" \
       org.label-schema.keywords="stafli, httpd, web, debian, centos" \
       org.label-schema.url="https://stafli.org/" \
       org.label-schema.license="GPLv3" \
@@ -108,8 +108,7 @@ RUN printf "Installing repositories and packages...\n" && \
     printf "Install the httpd packages...\n" && \
     rpm --rebuilddb && \
     yum makecache && yum install -y \
-      httpd \
-      httpd-tools apachetop \
+      httpd httpd-tools apachetop \
       mod_ssl \
       mod_authnz_external pwauth \
       mod_xsendfile && \
@@ -312,7 +311,7 @@ RUN printf "Start installing modules...\n" && \
     \
     printf "Done enabling/disabling modules...\n" && \
     \
-    printf "\n# Checking modules...\n" && \
+    printf "\nChecking modules...\n" && \
     $(which apachectl) -l; $(which apachectl) -M && \
     printf "Done checking modules...\n" && \
     \
@@ -386,6 +385,12 @@ RUN printf "Updading Supervisor configuration...\n" && \
 command=/bin/bash -c \"\$(which apachectl) -d /etc/httpd -f /etc/httpd/conf/httpd.conf -D FOREGROUND\"\n\
 autostart=false\n\
 autorestart=true\n\
+stdout_logfile=/dev/stdout\n\
+stdout_logfile_maxbytes=0\n\
+stderr_logfile=/dev/stderr\n\
+stderr_logfile_maxbytes=0\n\
+stdout_events_enabled=true\n\
+stderr_events_enabled=true\n\
 \n" > ${file} && \
     printf "Done patching ${file}...\n" && \
     \
@@ -399,7 +404,8 @@ RUN printf "Updading HTTPd configuration...\n" && \
     printf "\n# Applying configuration for ${file}...\n" && \
     # run as user/group \
     perl -0p -i -e "s>#  don't use Group #-1 on these systems!\n#\nUser .*\nGroup .*>#  don't use Group #-1 on these systems!\n#\nUser ${app_httpd_global_user}\nGroup ${app_httpd_global_group}>" ${file} && \
-    # change log level \
+    # change logging \
+    perl -0p -i -e "s># container, that host's errors will be logged there and not here.\n#\nErrorLog .*>ErrorLog /proc/self/fd/2>" ${file} && \
     perl -0p -i -e "s># alert, emerg.\n#\nLogLevel .*># alert, emerg.\n#\nLogLevel ${app_httpd_global_loglevel}>" ${file} && \
     # change config directory \
     perl -0p -i -e "s># Do NOT add a slash at the end of the directory path.\n#\nServerRoot .*># Do NOT add a slash at the end of the directory path.\n#\nServerRoot \"/etc/httpd\">" ${file} && \
@@ -610,7 +616,7 @@ SSLStaplingCache shmcb:/var/run/ocsp\(128000\)\n\
     perl -0p -i -e "s>.*DocumentRoot \"/var/www/html\">#DocumentRoot \"/var/www/html\">" ${file} && \
     perl -0p -i -e "s>.*ServerAdmin root@localhost>#ServerAdmin root@localhost>" ${file} && \
     perl -0p -i -e "s>.*ServerName www.example.com:443>#ServerName www.example.com:443>" ${file} && \
-    perl -0p -i -e "s>.*ErrorLog logs/ssl_error_log\nTransferLog logs/ssl_access_log\nLogLevel warn>#ErrorLog logs/ssl_error_log\n#TransferLog logs/ssl_access_log\n#LogLevel warn>" ${file} && \
+    perl -0p -i -e "s>.*ErrorLog logs/ssl_error_log\nTransferLog logs/ssl_access_log\nLogLevel warn>#ErrorLog /proc/self/fd/2\n#TransferLog /proc/self/fd/1\n#LogLevel warn>" ${file} && \
     perl -0p -i -e "s>.*SSLEngine on>#SSLEngine on>" ${file} && \
     perl -0p -i -e "s>.*SSLCertificateFile /etc/pki/tls/certs/localhost.crt>#SSLCertificateFile /etc/pki/tls/certs/localhost.crt>" ${file} && \
     perl -0p -i -e "s>.*SSLCertificateKeyFile /etc/pki/tls/private/localhost.key>#SSLCertificateKeyFile /etc/pki/tls/private/localhost.key>" ${file} && \
@@ -625,10 +631,20 @@ SSLStaplingCache shmcb:/var/run/ocsp\(128000\)\n\
 #    SSLOptions \+StdEnvVars\n\
 #\</Directory\>\
 >" ${file} && \
-    perl -0p -i -e "s>CustomLog logs/ssl_request_log>#CustomLog logs/ssl_request_log>" ${file} && \
+    perl -0p -i -e "s>CustomLog logs/ssl_request_log>#CustomLog /proc/self/fd/1>" ${file} && \
     perl -0p -i -e "s>          \"%t>#          \"%t>" ${file} && \
     perl -0p -i -e "s>\</VirtualHost\>>#\</VirtualHost\>>" ${file} && \
     printf "Done patching ${file}...\n" && \
+    \
+    # /etc/httpd/conf.modules.d/other-vhosts-access-log.conf \
+    file="/etc/httpd/conf.modules.d/other-vhosts-access-log.conf" && \
+    printf "\n# Applying configuration for ${file}...\n" && \
+    printf "\
+# Define an access log for VirtualHosts that don't define their own logfile\n\
+CustomLog /proc/self/fd/1 vhost_combined\n\
+\n\
+# vim: syntax=apache ts=4 sw=4 sts=4 sr noet\n\
+\n" > ${file} && \
     \
     # /etc/httpd/sites.d/${app_httpd_vhost_id}-http.conf \
     file="/etc/httpd/sites.d/${app_httpd_vhost_id}-http.conf" && \
@@ -641,8 +657,8 @@ SSLStaplingCache shmcb:/var/run/ocsp\(128000\)\n\
         ServerAdmin webmaster@localhost\n\
         DocumentRoot ${app_httpd_vhost_home}/html\n\
 \n\
-        ErrorLog ${app_httpd_vhost_home}/log/${app_httpd_vhost_id}.error.log\n\
-        TransferLog ${app_httpd_vhost_home}/log/${app_httpd_vhost_id}.access.log\n\
+        ErrorLog /proc/self/fd/2\n\
+        TransferLog /proc/self/fd/1\n\
         LogLevel warn\n\
 \n\
         <Directory ${app_httpd_vhost_home}/html>\n\
@@ -675,8 +691,8 @@ SSLStaplingCache shmcb:/var/run/ocsp\(128000\)\n\
         ServerAdmin webmaster@localhost\n\
         DocumentRoot ${app_httpd_vhost_home}/html\n\
 \n\
-        ErrorLog ${app_httpd_vhost_home}/log/${app_httpd_vhost_id}.error.log\n\
-        TransferLog ${app_httpd_vhost_home}/log/${app_httpd_vhost_id}.access.log\n\
+        ErrorLog /proc/self/fd/2\n\
+        TransferLog /proc/self/fd/1\n\
         LogLevel warn\n\
 \n\
         <Directory ${app_httpd_vhost_home}/html>\n\

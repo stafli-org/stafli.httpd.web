@@ -1,6 +1,6 @@
 # Stafli HTTPd Web Server
 Stafli HTTPd Web Server builds based on [Debian](https://www.debian.org) and [CentOS](https://www.centos.org), and developed as scripts for [Docker](https://www.docker.com).  
-Continues on [Stafli Base System](https://github.com/stafli-org/stafli.system.base) and [Stafli Devel System](https://github.com/stafli-org/stafli.system.devel) builds.  
+Continues on [Stafli Supervisor Init](https://github.com/stafli-org/stafli.init.supervisor) builds.  
 This project is part of the [Stafli Application Stack](https://github.com/stafli-org).
 
 Requires [Docker Compose](https://docs.docker.com/compose) 1.6.x or higher due to the [version 2](https://docs.docker.com/compose/compose-file/#versioning) format of the docker-compose.yml files.
@@ -23,9 +23,8 @@ The services use custom images as a starting point for the following distributio
 
 ## Services
 These are the services described by the dockerfile and docker-compose files:
-- HTTPd 2.2.x (debian7), built on [Stafli Devel System](https://github.com/stafli-org/stafli.system.devel) and additional [Apache HTTPd](https://httpd.apache.org) packages
-- HTTPd 2.2.x (centos6), built on [Stafli Base System](https://github.com/stafli-org/stafli.system.base) and additional [Apache HTTPd](https://httpd.apache.org) packages
-- HTTPd 2.4.x (debian8 and centos7), built on [Stafli Base System](https://github.com/stafli-org/stafli.system.base) and additional [Apache HTTPd](https://httpd.apache.org) packages
+- HTTPd 2.2.x (debian7 and centos6), built on [Stafli Supervisor Init](https://github.com/stafli-org/stafli.init.supervisor) and additional [Apache HTTPd](https://httpd.apache.org) packages
+- HTTPd 2.4.x (debian8 and centos7), built on [Stafli Supervisor Init](https://github.com/stafli-org/stafli.init.supervisor) and additional [Apache HTTPd](https://httpd.apache.org) packages
 
 ## Images
 These are the [resulting images](https://hub.docker.com/r/stafli/stafli.web.httpd/tags) upon building:

@@ -24,14 +24,14 @@
 #
 
 # Base image to use
-FROM stafli/stafli.system.base:base10_debian8
+FROM stafli/stafli.init.supervisor:supervisor30_debian8
 
 # Labels to apply
-LABEL description="Stafli HTTP Web Server (stafli/stafli.web.httpd), Based on Stafli Base System (stafli/stafli.system.base)" \
+LABEL description="Stafli HTTP Web Server (stafli/stafli.web.httpd), Based on Stafli Supervisor Init (stafli/stafli.init.supervisor)" \
       maintainer="lp@algarvio.org" \
       org.label-schema.schema-version="1.0.0-rc.1" \
       org.label-schema.name="Stafli HTTP Web Server (stafli/stafli.web.httpd)" \
-      org.label-schema.description="Based on Stafli Base System (stafli/stafli.system.base)" \
+      org.label-schema.description="Based on Stafli Supervisor Init (stafli/stafli.init.supervisor)" \
       org.label-schema.keywords="stafli, httpd, web, debian, centos" \
       org.label-schema.url="https://stafli.org/" \
       org.label-schema.license="GPLv3" \
@@ -110,8 +110,7 @@ RUN printf "Installing repositories and packages...\n" && \
     \
     printf "Install the httpd packages...\n" && \
     apt-get update && apt-get install -qy \
-      apache2 \
-      apache2-utils apachetop \
+      apache2 apache2-utils apachetop \
       apache2-mpm-event \
       libapache2-mod-authnz-external pwauth \
       libapache2-mod-xsendfile libapache2-mod-upload-progress \
@@ -138,7 +137,7 @@ RUN printf "Start installing modules...\n" && \
     $(which a2enmod) -f ${app_httpd_global_mods_extra_en} && \
     printf "Done enabling/disabling modules...\n" && \
     \
-    printf "\n# Checking modules...\n" && \
+    printf "\nChecking modules...\n" && \
     $(which apache2ctl) -l; $(which apache2ctl) -M && \
     printf "Done checking modules...\n" && \
     \
@@ -212,6 +211,12 @@ RUN printf "Updading Supervisor configuration...\n" && \
 command=/bin/bash -c \"\$(which apache2ctl) -d /etc/apache2 -f /etc/apache2/apache2.conf -D FOREGROUND\"\n\
 autostart=false\n\
 autorestart=true\n\
+stdout_logfile=/dev/stdout\n\
+stdout_logfile_maxbytes=0\n\
+stderr_logfile=/dev/stderr\n\
+stderr_logfile_maxbytes=0\n\
+stdout_events_enabled=true\n\
+stderr_events_enabled=true\n\
 \n" > ${file} && \
     printf "Done patching ${file}...\n" && \
     \
@@ -231,7 +236,8 @@ RUN printf "Updading HTTPd configuration...\n" && \
     # /etc/apache2/apache2.conf \
     file="/etc/apache2/apache2.conf" && \
     printf "\n# Applying configuration for ${file}...\n" && \
-    # change log level \
+    # change logging \
+    perl -0p -i -e "s># container, that host's errors will be logged there and not here.\n#\nErrorLog .*>ErrorLog /proc/self/fd/2>" ${file} && \
     perl -0p -i -e "s># alert, emerg.\n#\nLogLevel .*># alert, emerg.\n#\nLogLevel ${app_httpd_global_loglevel}>" ${file} && \
     # change config directory \
     perl -0p -i -e "s># Do NOT add a slash at the end of the directory path.\n#\nServerRoot .*># Do NOT add a slash at the end of the directory path.\n#\nServerRoot \"/etc/apache2\">" ${file} && \
@@ -323,6 +329,13 @@ RUN printf "Updading HTTPd configuration...\n" && \
 \n" > ${file} && \
     printf "Done patching ${file}...\n" && \
     \
+    # /etc/apache2/conf-available/other-vhosts-access-log.conf \
+    file="/etc/apache2/conf-available/other-vhosts-access-log.conf" && \
+    printf "\n# Applying configuration for ${file}...\n" && \
+    # change logging \
+    perl -0p -i -e "s># Define an access log for VirtualHosts that don't define their own logfile\nCustomLog .*># Define an access log for VirtualHosts that don't define their own logfile\nCustomLog /proc/self/fd/1 vhost_combined>" ${file} && \
+    printf "Done patching ${file}...\n" && \
+    \
     # Rename original vhost configuration \
     mv /etc/apache2/sites-available/000-default.conf /etc/apache2/sites-available/000-default.conf.orig && \
     mv /etc/apache2/sites-available/default-ssl.conf /etc/apache2/sites-available/000-default-ssl.conf.orig && \
@@ -334,8 +347,8 @@ RUN printf "Updading HTTPd configuration...\n" && \
     # change address and port
     perl -0p -i -e "s>\<VirtualHost .*\>>\<VirtualHost ${app_httpd_vhost_listen_addr}:${app_httpd_vhost_listen_port_http}\>>" ${file} && \
     # change logging
-    perl -0p -i -e "s>ErrorLog .*>ErrorLog ${app_httpd_vhost_home}/log/${app_httpd_vhost_id}.error.log>" ${file} && \
-    perl -0p -i -e "s>CustomLog .*>CustomLog ${app_httpd_vhost_home}/log/${app_httpd_vhost_id}.access.log combined>" ${file} && \
+    perl -0p -i -e "s>ErrorLog .*>ErrorLog /proc/self/fd/2>" ${file} && \
+    perl -0p -i -e "s>CustomLog .*>CustomLog /proc/self/fd/1 combined>" ${file} && \
     # change document root
     perl -0p -i -e "s>DocumentRoot .*>DocumentRoot ${app_httpd_vhost_home}/html>" ${file} && \
     # add directory directives
@@ -366,8 +379,8 @@ RUN printf "Updading HTTPd configuration...\n" && \
     # change address and port
     perl -0p -i -e "s>\<VirtualHost .*\>>\<VirtualHost ${app_httpd_vhost_listen_addr}:${app_httpd_vhost_listen_port_https}\>>" ${file} && \
     # change logging
-    perl -0p -i -e "s>ErrorLog .*>ErrorLog ${app_httpd_vhost_home}/log/${app_httpd_vhost_id}.error.log>" ${file} && \
-    perl -0p -i -e "s>CustomLog .*>CustomLog ${app_httpd_vhost_home}/log/${app_httpd_vhost_id}.access.log combined>" ${file} && \
+    perl -0p -i -e "s>ErrorLog .*>ErrorLog /proc/self/fd/2>" ${file} && \
+    perl -0p -i -e "s>CustomLog .*>CustomLog /proc/self/fd/1 combined>" ${file} && \
     # change document root
     perl -0p -i -e "s>DocumentRoot .*>DocumentRoot ${app_httpd_vhost_home}/html>" ${file} && \
     # add directory directives

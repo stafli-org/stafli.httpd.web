@@ -24,14 +24,14 @@
 #
 
 # Base image to use
-FROM stafli/stafli.system.devel:devel10_debian7
+FROM stafli/stafli.init.supervisor:supervisor30_debian7
 
 # Labels to apply
-LABEL description="Stafli HTTP Web Server (stafli/stafli.web.httpd), Based on Stafli Base System (stafli/stafli.system.base)" \
+LABEL description="Stafli HTTP Web Server (stafli/stafli.web.httpd), Based on Stafli Supervisor Init (stafli/stafli.init.supervisor)" \
       maintainer="lp@algarvio.org" \
       org.label-schema.schema-version="1.0.0-rc.1" \
       org.label-schema.name="Stafli HTTP Web Server (stafli/stafli.web.httpd)" \
-      org.label-schema.description="Based on Stafli Base System (stafli/stafli.system.base)" \
+      org.label-schema.description="Based on Stafli Supervisor Init (stafli/stafli.init.supervisor)" \
       org.label-schema.keywords="stafli, httpd, web, debian, centos" \
       org.label-schema.url="https://stafli.org/" \
       org.label-schema.license="GPLv3" \
@@ -111,8 +111,7 @@ RUN printf "Installing repositories and packages...\n" && \
     \
     printf "Install the httpd packages...\n" && \
     apt-get update && apt-get install -qy \
-      apache2 apache2-threaded-dev \
-      apache2-utils apachetop \
+      apache2 apache2-utils apachetop \
       apache2-mpm-worker \
       libapache2-mod-authnz-external pwauth \
       libapache2-mod-xsendfile libapache2-mod-upload-progress \
@@ -127,10 +126,42 @@ RUN printf "Installing repositories and packages...\n" && \
 # HTTPd DSO modules
 #
 
+# Install php packages
+#  - apache2-threaded-dev: the HTTPd development libraries
+# Install parser packages
+#  - gawk: for gawk, GNU awk, a pattern scanning and processing language
+#  - m4: for m4, the GNU m4 which is an interpreter for a macro processing language (required for compiling)
+#  - re2c: for r2ec, a tool for generating fast C-based recognizers
+# Install build tools packages
+#  - make: for make, the GNU make which is an utility for Directing compilation
+#  - automake: for automake, a tool for generating GNU Standards-compliant Makefiles (required for compiling)
+#  - autoconf: for autoconf, a automatic configure script builder for FSF source packages (required for compiling)
+#  - pkg-config: for pkg-config, a tool to manage compile and link flags for libraries (required for compiling)
+#  - libtool: for GNU libtool, a generic library support script (required for compiling)
+# Install compiler packages
+#  - cpp: for cpp, the GNU C preprocessor (cpp) for the C Programming language (required for compiling)
+#  - gcc: for gcc, the GNU C compiler (required for compiling)
+#  - g++: for g++, the GNU C++ compiler (required for compiling)
+# Install library packages
+#  - linux-libc-dev: the Linux Kernel - Headers for development (required for compiling)
+#  - libc6-dev: the Embedded GNU C Library - Development Libraries and Header Files (required for compiling)
+#  - libpcre3-dev: the Perl 5 Compatible Regular Expression Library - development files (required for compiling)
 # Build and install httpd modules
 #  - Proxy FastCGI (mod_proxy_fcgi)
+# Remove the various development packages
 # Enable/disable httpd modules
 RUN printf "Start installing modules...\n" && \
+    \
+    printf "Install the development packages...\n" && \
+    packages_devel=" \
+      apache2-threaded-dev \
+      gawk m4 re2c \
+      make automake autoconf pkg-config libtool \
+      cpp gcc g++ \
+      linux-libc-dev libc6-dev libpcre3-dev \
+" && \
+    apt-get update && apt-get install -qy \
+      ${packages_devel} && \
     \
     printf "Building the Proxy FastCGI (mod_proxy_fcgi) module...\n" && \
     ( \
@@ -155,6 +186,13 @@ LoadModule proxy_fcgi_module /usr/lib/apache2/modules/mod_proxy_fcgi.so\n\
     \
     printf "Done building modules...\n" && \
     \
+    printf "Remove the various development packages...\n" && \
+    apt-get remove --purge ${packages_devel} -qy && \
+    apt-get autoremove --purge -qy && \
+    \
+    printf "Cleanup the package manager...\n" && \
+    apt-get clean && rm -rf /var/lib/apt/lists/* && \
+    \
     printf "Enabling/disabling modules...\n" && \
     # Core modules \
     $(which a2dismod) -f ${app_httpd_global_mods_core_dis} && \
@@ -164,7 +202,7 @@ LoadModule proxy_fcgi_module /usr/lib/apache2/modules/mod_proxy_fcgi.so\n\
     $(which a2enmod) -f ${app_httpd_global_mods_extra_en} && \
     printf "Done enabling/disabling modules...\n" && \
     \
-    printf "\n# Checking modules...\n" && \
+    printf "\nChecking modules...\n" && \
     $(which apache2ctl) -l; $(which apache2ctl) -M && \
     printf "Done checking modules...\n" && \
     \
@@ -238,6 +276,12 @@ RUN printf "Updading Supervisor configuration...\n" && \
 command=/bin/bash -c \"\$(which apache2ctl) -d /etc/apache2 -f /etc/apache2/apache2.conf -D FOREGROUND\"\n\
 autostart=false\n\
 autorestart=true\n\
+stdout_logfile=/dev/stdout\n\
+stdout_logfile_maxbytes=0\n\
+stderr_logfile=/dev/stderr\n\
+stderr_logfile_maxbytes=0\n\
+stdout_events_enabled=true\n\
+stderr_events_enabled=true\n\
 \n" > ${file} && \
     printf "Done patching ${file}...\n" && \
     \
@@ -257,7 +301,8 @@ RUN printf "Updading HTTPd configuration...\n" && \
     # /etc/apache2/apache2.conf \
     file="/etc/apache2/apache2.conf" && \
     printf "\n# Applying configuration for ${file}...\n" && \
-    # change log level \
+    # change logging \
+    perl -0p -i -e "s># container, that host's errors will be logged there and not here.\n#\nErrorLog .*>ErrorLog /proc/self/fd/2>" ${file} && \
     perl -0p -i -e "s># alert, emerg.\n#\nLogLevel .*># alert, emerg.\n#\nLogLevel ${app_httpd_global_loglevel}>" ${file} && \
     # change config directory \
     perl -0p -i -e "s># Do NOT add a slash at the end of the directory path.\n#\nServerRoot .*># Do NOT add a slash at the end of the directory path.\n#\nServerRoot \"/etc/apache2\">" ${file} && \
@@ -399,6 +444,13 @@ RUN printf "Updading HTTPd configuration...\n" && \
 \n" > ${file} && \
     printf "Done patching ${file}...\n" && \
     \
+    # /etc/apache2/conf-available/other-vhosts-access-log.conf \
+    file="/etc/apache2/conf-available/other-vhosts-access-log.conf" && \
+    printf "\n# Applying configuration for ${file}...\n" && \
+    # change logging \
+    perl -0p -i -e "s># Define an access log for VirtualHosts that don't define their own logfile\nCustomLog .*># Define an access log for VirtualHosts that don't define their own logfile\nCustomLog /proc/self/fd/1 vhost_combined>" ${file} && \
+    printf "Done patching ${file}...\n" && \
+    \
     # Rename original vhost configuration \
     mv /etc/apache2/sites-available/default /etc/apache2/sites-available/000-default.conf.orig && \
     mv /etc/apache2/sites-available/default-ssl /etc/apache2/sites-available/000-default-ssl.conf.orig && \
@@ -410,8 +462,8 @@ RUN printf "Updading HTTPd configuration...\n" && \
     # change address and port
     perl -0p -i -e "s>\<VirtualHost .*\>>\<VirtualHost ${app_httpd_vhost_listen_addr}:${app_httpd_vhost_listen_port_http}\>>" ${file} && \
     # change logging
-    perl -0p -i -e "s>ErrorLog .*>ErrorLog ${app_httpd_vhost_home}/log/${app_httpd_vhost_id}.error.log>" ${file} && \
-    perl -0p -i -e "s>CustomLog .*>CustomLog ${app_httpd_vhost_home}/log/${app_httpd_vhost_id}.access.log combined>" ${file} && \
+    perl -0p -i -e "s>ErrorLog .*>ErrorLog /proc/self/fd/2>" ${file} && \
+    perl -0p -i -e "s>CustomLog .*>CustomLog /proc/self/fd/1 combined>" ${file} && \
     # change document root
     perl -0p -i -e "s>DocumentRoot .*>DocumentRoot ${app_httpd_vhost_home}/html>" ${file} && \
     # remove old directory directives \
@@ -454,8 +506,8 @@ RUN printf "Updading HTTPd configuration...\n" && \
     # change address and port
     perl -0p -i -e "s>\<VirtualHost .*\>>\<VirtualHost ${app_httpd_vhost_listen_addr}:${app_httpd_vhost_listen_port_https}\>>" ${file} && \
     # change logging
-    perl -0p -i -e "s>ErrorLog .*>ErrorLog ${app_httpd_vhost_home}/log/${app_httpd_vhost_id}.error.log>" ${file} && \
-    perl -0p -i -e "s>CustomLog .*>CustomLog ${app_httpd_vhost_home}/log/${app_httpd_vhost_id}.access.log combined>" ${file} && \
+    perl -0p -i -e "s>ErrorLog .*>ErrorLog /proc/self/fd/2>" ${file} && \
+    perl -0p -i -e "s>CustomLog .*>CustomLog /proc/self/fd/1 combined>" ${file} && \
     # change document root
     perl -0p -i -e "s>DocumentRoot .*>DocumentRoot ${app_httpd_vhost_home}/html>" ${file} && \
     # remove old directory directives \
