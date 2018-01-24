@@ -96,25 +96,30 @@ ARG app_httpd_vhost_fpm_port="9000"
 # Packages
 #
 
-# Install httpd packages
-#  - httpd: for httpd, the HTTPd server
-#  - httpd-tools: for ab and others, the HTTPd utilities
-#  - apachetop: for apachetop, the top-like utility for HTTPd
-#  - mod_ssl: the OpenSSL DSO module
-#  - mod_authnz_external: the External Authentication DSO module
-#  - mod_xsendfile: the X-Sendfile DSO module
+# Refresh the package manager
+# Install the selected packages
+#   Install the httpd packages
+#    - httpd: for httpd, the HTTPd server
+#    - httpd-tools: for ab and others, the HTTPd utilities
+#    - apachetop: for apachetop, the top-like utility for HTTPd
+#    - mod_ssl: the OpenSSL DSO module
+#    - mod_authnz_external: the External Authentication DSO module
+#    - mod_xsendfile: the X-Sendfile DSO module
+# Cleanup the package manager
 RUN printf "Installing repositories and packages...\n" && \
     \
+    printf "Refresh the package manager...\n" && \
+    rpm --rebuilddb && yum makecache && \
+    \
     printf "Install the httpd packages...\n" && \
-    rpm --rebuilddb && \
-    yum makecache && yum install -y \
+    yum install -y \
       httpd httpd-tools apachetop \
       mod_ssl \
       mod_authnz_external pwauth \
       mod_xsendfile && \
     \
     printf "Cleanup the package manager...\n" && \
-    yum clean all && rm -Rf /var/lib/yum/* && \
+    yum clean all && rm -Rf /var/lib/yum/* && rm -Rf /var/cache/yum/* && \
     \
     printf "Finished installing repositories and packages...\n";
 
@@ -122,7 +127,7 @@ RUN printf "Installing repositories and packages...\n" && \
 # HTTPd DSO modules
 #
 
-# Enable/disable httpd modules
+# Enable/disable the httpd modules
 RUN printf "Start installing modules...\n" && \
     \
     printf "Enabling/disabling modules...\n" && \

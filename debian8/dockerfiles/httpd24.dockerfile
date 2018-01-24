@@ -96,20 +96,26 @@ ARG app_httpd_vhost_fpm_port="9000"
 # Packages
 #
 
-# Install httpd packages
-#  - apache2: for apache2, the HTTPd server
-#  - apache2-utils: for ab and others, the HTTPd utilities
-#  - apachetop: for apachetop, the top-like utility for HTTPd
-#  - apache2-mpm-event: the Event MPM module
-#  - libapache2-mod-authnz-external: the External Authentication DSO module
-#  - pwauth: for pwauth, the authenticator for mod_authnz_external
-#  - libapache2-mod-xsendfile: the X-Sendfile DSO module
-#  - libapache2-mod-upload-progress: the Upload Progress DSO module
-#  - ssl-cert: for make-ssl-cert, to generate certificates
+# Refresh the package manager
+# Install the selected packages
+#   Install the httpd packages
+#    - apache2: for apache2, the HTTPd server
+#    - apache2-utils: for ab and others, the HTTPd utilities
+#    - apachetop: for apachetop, the top-like utility for HTTPd
+#    - apache2-mpm-event: the Event MPM module
+#    - libapache2-mod-authnz-external: the External Authentication DSO module
+#    - pwauth: for pwauth, the authenticator for mod_authnz_external
+#    - libapache2-mod-xsendfile: the X-Sendfile DSO module
+#    - libapache2-mod-upload-progress: the Upload Progress DSO module
+#    - ssl-cert: for make-ssl-cert, to generate certificates
+# Cleanup the package manager
 RUN printf "Installing repositories and packages...\n" && \
     \
+    printf "Refresh the package manager...\n" && \
+    apt-get update && \
+    \
     printf "Install the httpd packages...\n" && \
-    apt-get update && apt-get install -qy \
+    apt-get install -qy \
       apache2 apache2-utils apachetop \
       apache2-mpm-event \
       libapache2-mod-authnz-external pwauth \
@@ -117,7 +123,7 @@ RUN printf "Installing repositories and packages...\n" && \
       ssl-cert && \
     \
     printf "Cleanup the package manager...\n" && \
-    apt-get clean && rm -rf /var/lib/apt/lists/* && \
+    apt-get clean && rm -rf /var/lib/apt/lists/* && rm -Rf /var/cache/apt/* && \
     \
     printf "Finished installing repositories and packages...\n";
 
@@ -125,7 +131,7 @@ RUN printf "Installing repositories and packages...\n" && \
 # HTTPd DSO modules
 #
 
-# Enable/disable httpd modules
+# Enable/disable the httpd modules
 RUN printf "Start installing modules...\n" && \
     \
     printf "Enabling/disabling modules...\n" && \

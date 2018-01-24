@@ -96,21 +96,26 @@ ARG app_httpd_vhost_fpm_port="9000"
 # Packages
 #
 
-# Install httpd packages
-#  - apache2: for apache2, the HTTPd server
-#  - apache2-threaded-dev: the HTTPd development libraries
-#  - apache2-utils: for ab and others, the HTTPd utilities
-#  - apachetop: for apachetop, the top-like utility for HTTPd
-#  - apache2-mpm-worker: the Worker MPM module
-#  - libapache2-mod-authnz-external: the External Authentication DSO module
-#  - pwauth: for pwauth, the authenticator for mod_authnz_external
-#  - libapache2-mod-xsendfile: the X-Sendfile DSO module
-#  - libapache2-mod-upload-progress: the Upload Progress DSO module
-#  - ssl-cert: for make-ssl-cert, to generate certificates
+# Refresh the package manager
+# Install the selected packages
+#   Install the httpd packages
+#    - apache2: for apache2, the HTTPd server
+#    - apache2-utils: for ab and others, the HTTPd utilities
+#    - apachetop: for apachetop, the top-like utility for HTTPd
+#    - apache2-mpm-worker: the Worker MPM module
+#    - libapache2-mod-authnz-external: the External Authentication DSO module
+#    - pwauth: for pwauth, the authenticator for mod_authnz_external
+#    - libapache2-mod-xsendfile: the X-Sendfile DSO module
+#    - libapache2-mod-upload-progress: the Upload Progress DSO module
+#    - ssl-cert: for make-ssl-cert, to generate certificates
+# Cleanup the package manager
 RUN printf "Installing repositories and packages...\n" && \
     \
+    printf "Refresh the package manager...\n" && \
+    apt-get update && \
+    \
     printf "Install the httpd packages...\n" && \
-    apt-get update && apt-get install -qy \
+    apt-get install -qy \
       apache2 apache2-utils apachetop \
       apache2-mpm-worker \
       libapache2-mod-authnz-external pwauth \
@@ -118,7 +123,7 @@ RUN printf "Installing repositories and packages...\n" && \
       ssl-cert && \
     \
     printf "Cleanup the package manager...\n" && \
-    apt-get clean && rm -rf /var/lib/apt/lists/* && \
+    apt-get clean && rm -rf /var/lib/apt/lists/* && rm -Rf /var/cache/apt/* && \
     \
     printf "Finished installing repositories and packages...\n";
 
@@ -126,31 +131,37 @@ RUN printf "Installing repositories and packages...\n" && \
 # HTTPd DSO modules
 #
 
-# Install php packages
-#  - apache2-threaded-dev: the HTTPd development libraries
-# Install parser packages
-#  - gawk: for gawk, GNU awk, a pattern scanning and processing language
-#  - m4: for m4, the GNU m4 which is an interpreter for a macro processing language (required for compiling)
-#  - re2c: for r2ec, a tool for generating fast C-based recognizers
-# Install build tools packages
-#  - make: for make, the GNU make which is an utility for Directing compilation
-#  - automake: for automake, a tool for generating GNU Standards-compliant Makefiles (required for compiling)
-#  - autoconf: for autoconf, a automatic configure script builder for FSF source packages (required for compiling)
-#  - pkg-config: for pkg-config, a tool to manage compile and link flags for libraries (required for compiling)
-#  - libtool: for GNU libtool, a generic library support script (required for compiling)
-# Install compiler packages
-#  - cpp: for cpp, the GNU C preprocessor (cpp) for the C Programming language (required for compiling)
-#  - gcc: for gcc, the GNU C compiler (required for compiling)
-#  - g++: for g++, the GNU C++ compiler (required for compiling)
-# Install library packages
-#  - linux-libc-dev: the Linux Kernel - Headers for development (required for compiling)
-#  - libc6-dev: the Embedded GNU C Library - Development Libraries and Header Files (required for compiling)
-#  - libpcre3-dev: the Perl 5 Compatible Regular Expression Library - development files (required for compiling)
-# Build and install httpd modules
+# Refresh the package manager
+# Install the development packages
+#   Install the httpd packages
+#    - apache2-threaded-dev: the HTTPd development libraries
+#   Install parser packages
+#    - gawk: for gawk, GNU awk, a pattern scanning and processing language
+#    - m4: for m4, the GNU m4 which is an interpreter for a macro processing language (required for compiling)
+#    - re2c: for r2ec, a tool for generating fast C-based recognizers
+#   Install build tools packages
+#    - make: for make, the GNU make which is an utility for Directing compilation
+#    - automake: for automake, a tool for generating GNU Standards-compliant Makefiles (required for compiling)
+#    - autoconf: for autoconf, a automatic configure script builder for FSF source packages (required for compiling)
+#    - pkg-config: for pkg-config, a tool to manage compile and link flags for libraries (required for compiling)
+#    - libtool: for GNU libtool, a generic library support script (required for compiling)
+#   Install compiler packages
+#    - cpp: for cpp, the GNU C preprocessor (cpp) for the C Programming language (required for compiling)
+#    - gcc: for gcc, the GNU C compiler (required for compiling)
+#    - g++: for g++, the GNU C++ compiler (required for compiling)
+#   Install library packages
+#    - linux-libc-dev: the Linux Kernel - Headers for development (required for compiling)
+#    - libc6-dev: the Embedded GNU C Library - Development Libraries and Header Files (required for compiling)
+#    - libpcre3-dev: the Perl 5 Compatible Regular Expression Library - development files (required for compiling)
+# Build and install the httpd modules
 #  - Proxy FastCGI (mod_proxy_fcgi)
 # Remove the various development packages
-# Enable/disable httpd modules
+# Cleanup the package manager
+# Enable/disable the httpd modules
 RUN printf "Start installing modules...\n" && \
+    \
+    printf "Refresh the package manager...\n" && \
+    apt-get update && \
     \
     printf "Install the development packages...\n" && \
     packages_devel=" \
@@ -160,12 +171,12 @@ RUN printf "Start installing modules...\n" && \
       cpp gcc g++ \
       linux-libc-dev libc6-dev libpcre3-dev \
 " && \
-    apt-get update && apt-get install -qy \
+    apt-get install -qy \
       ${packages_devel} && \
     \
     printf "Building the Proxy FastCGI (mod_proxy_fcgi) module...\n" && \
     ( \
-      wget -qO- https://github.com/ceph/mod-proxy-fcgi/archive/master.tar.gz | tar xz && cd mod-proxy-fcgi-master && \
+      curl -L https://github.com/ceph/mod-proxy-fcgi/archive/master.tar.gz | tar xz && cd mod-proxy-fcgi-master && \
       ln -sf apxs2 /usr/bin/apxs && \
       autoconf && ./configure && \
       sed -i "s>top_srcdir\=>top_srcdir\=.>" Makefile && \
@@ -191,7 +202,7 @@ LoadModule proxy_fcgi_module /usr/lib/apache2/modules/mod_proxy_fcgi.so\n\
     apt-get autoremove --purge -qy && \
     \
     printf "Cleanup the package manager...\n" && \
-    apt-get clean && rm -rf /var/lib/apt/lists/* && \
+    apt-get clean && rm -rf /var/lib/apt/lists/* && rm -Rf /var/cache/apt/* && \
     \
     printf "Enabling/disabling modules...\n" && \
     # Core modules \
