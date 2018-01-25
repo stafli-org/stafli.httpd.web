@@ -420,6 +420,7 @@ RUN printf "Updading HTTPd configuration...\n" && \
     # change logging \
     perl -0p -i -e "s># container, that host's errors will be logged there and not here.\n#\nErrorLog .*>ErrorLog /proc/self/fd/2>" ${file} && \
     perl -0p -i -e "s># alert, emerg.\n#\nLogLevel .*># alert, emerg.\n#\nLogLevel ${app_httpd_global_loglevel}>" ${file} && \
+    perl -0p -i -e "s>CustomLog logs/access_log combined>#CustomLog logs/access_log combined>" ${file} && \
     # change config directory \
     perl -0p -i -e "s># Do NOT add a slash at the end of the directory path.\n#\nServerRoot .*># Do NOT add a slash at the end of the directory path.\n#\nServerRoot \"/etc/httpd\">" ${file} && \
     # replace optional config files \
