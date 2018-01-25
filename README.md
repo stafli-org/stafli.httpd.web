@@ -23,23 +23,25 @@ The services use custom images as a starting point for the following distributio
 
 ## Services
 These are the services described by the dockerfile and docker-compose files:
-- HTTPd 2.2.x (debian7 and centos6), built on [Stafli Supervisor Init](https://github.com/stafli-org/stafli.init.supervisor) and additional [Apache HTTPd](https://httpd.apache.org) packages
 - HTTPd 2.4.x (debian8 and centos7), built on [Stafli Supervisor Init](https://github.com/stafli-org/stafli.init.supervisor) and additional [Apache HTTPd](https://httpd.apache.org) packages
+- HTTPd 2.2.x (debian7 and centos6), built on [Stafli Supervisor Init](https://github.com/stafli-org/stafli.init.supervisor) and additional [Apache HTTPd](https://httpd.apache.org) packages
 
 ## Images
 These are the [resulting images](https://hub.docker.com/r/stafli/stafli.web.httpd/tags) upon building:
-- HTTPd 2.2.x/2.4.x:
-  - stafli/stafli.web.httpd:httpd24_debian8
-  - stafli/stafli.web.httpd:httpd22_debian7
-  - stafli/stafli.web.httpd:httpd24_centos7
-  - stafli/stafli.web.httpd:httpd22_centos6
+- Stable:
+  - stafli/stafli.web.httpd:httpd24_debian8   [![](https://images.microbadger.com/badges/image/stafli/stafli.web.httpd:httpd24_debian8.svg)](https://microbadger.com/images/stafli/stafli.web.httpd:httpd24_debian8 "Get your own image badge on microbadger.com")
+  - stafli/stafli.web.httpd:httpd24_centos7   [![](https://images.microbadger.com/badges/image/stafli/stafli.web.httpd:httpd24_centos7.svg)](https://microbadger.com/images/stafli/stafli.web.httpd:httpd24_centos7 "Get your own image badge on microbadger.com")
+- Old Stable:
+  - stafli/stafli.web.httpd:httpd22_debian7   [![](https://images.microbadger.com/badges/image/stafli/stafli.web.httpd:httpd22_debian7.svg)](https://microbadger.com/images/stafli/stafli.web.httpd:httpd22_debian7 "Get your own image badge on microbadger.com")
+  - stafli/stafli.web.httpd:httpd22_centos6   [![](https://images.microbadger.com/badges/image/stafli/stafli.web.httpd:httpd22_centos6.svg)](https://microbadger.com/images/stafli/stafli.web.httpd:httpd22_centos6 "Get your own image badge on microbadger.com")
 
 ## Containers
 These containers can be created from the images:
-- HTTPd 2.2.x/2.4.x:
+- Stable:
   - stafli_web_httpd24_debian8_xxx
-  - stafli_web_httpd22_debian7_xxx
   - stafli_web_httpd24_centos7_xxx
+- Old Stable:
+  - stafli_web_httpd22_debian7_xxx
   - stafli_web_httpd22_centos6_xxx
 
 ## Usage
