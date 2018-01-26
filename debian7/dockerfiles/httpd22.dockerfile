@@ -420,7 +420,7 @@ RUN printf "Updading HTTPd configuration...\n" && \
     printf "Done patching ${file}...\n" && \
     \
     # Additional configuration files \
-    mkdir /etc/apache2/incl.d && \
+    mkdir -p /etc/apache2/incl.d && \
     \
     # HTTPd vhost \
     app_httpd_vhost_home="${app_httpd_global_home}/${app_httpd_vhost_id}" && \

@@ -133,7 +133,7 @@ RUN printf "Installing repositories and packages...\n" && \
 RUN printf "Start installing modules...\n" && \
     \
     # Module configuration files \
-    mkdir /etc/httpd/conf.modules.d && \
+    mkdir -p /etc/httpd/conf.modules.d && \
     touch /etc/httpd/conf.modules.d/00-dav.conf && \
     touch /etc/httpd/conf.modules.d/00-proxy.conf && \
     touch /etc/httpd/conf.modules.d/00-ssl.conf && \
@@ -572,7 +572,7 @@ CustomLog /proc/self/fd/1 vhost_combined\n\
 \n" > ${file} && \
     \
     # Additional configuration files \
-    mkdir /etc/httpd/incl.d && \
+    mkdir -p /etc/httpd/incl.d && \
     \
     # HTTPd vhost \
     app_httpd_vhost_home="${app_httpd_global_home}/${app_httpd_vhost_id}" && \
@@ -615,7 +615,7 @@ CustomLog /proc/self/fd/1 vhost_combined\n\
     printf "Done patching ${file}...\n" && \
     \
     # Vhost configuration files \
-    mkdir /etc/httpd/sites.d && \
+    mkdir -p /etc/httpd/sites.d && \
     \
     # /etc/httpd/conf/httpd.conf \
     file="/etc/httpd/conf/httpd.conf" && \

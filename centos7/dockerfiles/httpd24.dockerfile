@@ -550,7 +550,7 @@ SSLStaplingCache shmcb:/var/run/ocsp\(128000\)\n\
     printf "Done patching ${file}...\n" && \
     \
     # Additional configuration files \
-    mkdir /etc/httpd/incl.d && \
+    mkdir -p /etc/httpd/incl.d && \
     \
     # HTTPd vhost \
     app_httpd_vhost_home="${app_httpd_global_home}/${app_httpd_vhost_id}" && \
@@ -593,7 +593,7 @@ SSLStaplingCache shmcb:/var/run/ocsp\(128000\)\n\
     printf "Done patching ${file}...\n" && \
     \
     # Vhost configuration files \
-    mkdir /etc/httpd/sites.d && \
+    mkdir -p /etc/httpd/sites.d && \
     \
     # /etc/httpd/conf/httpd.conf \
     file="/etc/httpd/conf/httpd.conf" && \
